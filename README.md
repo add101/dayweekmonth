@@ -2,6 +2,8 @@
 # Day Week Month Planner 
 
 A simple, responsive React-based planner offering **Day**, **Week**, and **Month** views. This project aids organization, it's a simple scheduling app, with plans for future feature enhancement.
+## Link to Project preview on Netlify: 
+[https://dayweekmonth.netlify.app/](https://dayweekmonth.netlify.app/)
 
 ## ✨ Features
 
