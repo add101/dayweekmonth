@@ -1,234 +1,93 @@
-# Day, Week, Month Task Scheduler
 
-A modern React task scheduler with Firebase backend and Google authentication. Built with React, Tailwind CSS, and Zustand for state management.
+# Day Week Month Planner 
 
-## Features
+A simple, responsive React-based planner offering **Day**, **Week**, and **Month** views. This project aids organization, it's a simple scheduling app, with plans for future feature enhancement.
+## Link to Project preview on Netlify: 
+[https://dayweekmonth.netlify.app/](https://dayweekmonth.netlify.app/)
 
-- 📅 **Multiple Views**: Day, Week, and Month calendar views
-- 🔐 **Google Authentication**: Seamless sign-in with Google
-- 🎨 **Dark Mode**: Toggle between light and dark themes
-- 🔄 **Real-time Updates**: Live event synchronization with Firestore
-- 📱 **Responsive Design**: Works on desktop and mobile
-- ⚡ **Fast & Lightweight**: Optimized for performance
+## ✨ Features
 
-## Tech Stack
+* **Multi-View Planning:** Seamlessly switch between **Day**, **Week**, and **Month** views for flexible schedule management.
 
-- **Frontend**: React 19 + Vite
-- **Styling**: Tailwind CSS
-- **State Management**: Zustand
-- **Backend**: Firebase (Firestore + Authentication)
-- **Icons**: Lucide React
+* **Intuitive Navigation:** Navigate through time with forward and backward controls.
 
-## Quick Start
+* **Event Management:** Add, edit, and delete events with customizable titles, descriptions, and times.
 
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Firebase account
+* **Dark Mode Toggle:** Built-in dark mode with a toggle button (sun/moon icon) for comfortable viewing.
 
-### Installation
 
-1. **Clone the repository**
-```bash
-git clone <repository-url>
-cd dayweekmonth
-```
+## 🚀 Technologies Used
 
-2. **Install dependencies**
-```bash
-npm install
-```
+This project is primarily built using modern web technologies:
 
-3. **Set up Firebase**
+* **React (JavaScript):** A declarative, component-based JavaScript library for building user interfaces.
 
-   a. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
-   
-   b. Enable Authentication with Google provider:
-      - Go to Authentication → Sign-in method
-      - Enable Google provider
-   
-   c. Create a Firestore database:
-      - Go to Firestore Database
-      - Create database in test mode (for development)
-   
-   d. Update `src/config/firebase.js` with your config:
-   ```javascript
-   const firebaseConfig = {
-     apiKey: "your-api-key",
-     authDomain: "your-project.firebaseapp.com",
-     projectId: "your-project-id",
-     storageBucket: "your-project.appspot.com",
-     messagingSenderId: "123456789",
-     appId: "your-app-id"
-   };
-   ```
+* **Vite:** A fast and opinionated build tool that significantly improves the front-end development experience.
 
-4. **Run the application**
-```bash
-npm run dev
-```
+* **Tailwind CSS:** A utility-first CSS framework for rapidly building custom designs directly in your markup.
 
-Visit `http://localhost:5173` to see your application.
+* **Lucide React:** A beautiful, customizable icon library that provides the icons used throughout the application.
 
-## Project Structure
 
-```
-src/
-├── components/          # React components
-│   ├── Auth.jsx        # Authentication component
-│   └── ErrorNotification.jsx
-├── config/             # Firebase configuration
-│   └── firebase.js
-├── services/           # Firebase services
-│   ├── eventService.js # Event CRUD operations
-│   └── authService.js  # Authentication operations
-├── store/              # State management
-│   └── useStore.js
-└── App.jsx             # Main application
-```
+## 🛠️ Setup and Installation
 
-## Data Models
+To get this project running on your local machine, follow these steps:
 
-### Event Model
-```javascript
-{
-  id: string,
-  userId: string,
-  title: string,
-  description: string,
-  date: string, // YYYY-MM-DD format
-  time: string, // HH:MM format
-  createdAt: timestamp,
-  updatedAt: timestamp
-}
-```
+1.  **Clone the Repository:**
 
-### User Model
-```javascript
-{
-  uid: string,
-  email: string,
-  displayName: string,
-  photoURL: string
-}
-```
+    ```
+    git clone [YOUR_REPOSITORY_URL_HERE]
+    cd [YOUR_PROJECT_FOLDER_NAME]
+    ```
 
-## Features in Detail
+2.  **Install Dependencies:**
 
-### Authentication
-- Google OAuth integration
-- Automatic session management
-- User profile display
-- Secure sign-out
+    ```
+    npm install
+    ```
 
-### Event Management
-- Create, read, update, delete events
-- Real-time synchronization with Firestore
-- Date and time selection
-- Event descriptions
+    This will install all necessary packages, including React, Vite, Tailwind CSS, and Lucide React.
 
-### Calendar Views
-- **Day View**: Detailed daily schedule
-- **Week View**: 7-day overview
-- **Month View**: Full month calendar
-- Navigation between periods
+3.  **Tailwind CSS Configuration:**
+    Ensure your `tailwind.config.js` is correctly set up. 
 
-### UI/UX
-- Responsive design
-- Dark/light mode toggle
-- Loading states
-- Error handling
-- Real-time updates
+    Also, make sure your main CSS file (e.g., `src/index.css`) includes the Tailwind directives at the top:
 
-## Firebase Security Rules
+    ```css
+    /* src/index.css */
+    @import "tailwindcss";
+    ```
 
-For production, update your Firestore security rules:
+4.  **Run the Development Server:**
 
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /events/{eventId} {
-      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
-    }
-  }
-}
-```
+    ```
+    npm run dev
+    ```
 
-## Deployment
+    This will start the development server, usually accessible at `http://localhost:----` .
 
-### Vercel (Recommended)
-```bash
-npm run build
-vercel --prod
-```
+## 💡 Future Development
 
-### Netlify
-```bash
-npm run build
-# Deploy dist/ folder
-```
+This project is a starting point, and I have several ideas for future enhancements:
 
-### Firebase Hosting
-```bash
-npm install -g firebase-tools
-firebase login
-firebase init hosting
-npm run build
-firebase deploy
-```
+* **Recurring Events:** Add support for creating recurring daily, weekly, or monthly events, and a daily checklist + stats and streaks.
+* **Event Persistence:** Implement local storage or a database (e.g., Firebase Firestore) to save events so they persist across sessions.
 
-## Environment Variables
+* **User Accounts:** Add authentication to allow multiple users to have their own private schedules.
 
-Create a `.env` file for sensitive configuration:
+* **Notifications:** Integrate calendar notifications for upcoming events.
 
-```env
-VITE_FIREBASE_API_KEY=your-api-key
-VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=your-project-id
-VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
-VITE_FIREBASE_APP_ID=your-app-id
-```
+* **Drag-and-Drop:** Allow users to drag and drop events to reschedule them.
 
-Then update `src/config/firebase.js`:
-```javascript
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID
-};
-```
+* **Customization:** More options for theme customization, event colors, etc.
 
-## Contributing
+* **Search Functionality:** Ability to search for specific events.
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+## 🤝 Contributing
+
+While this is a personal project, any feedback or suggestions are welcome!
 
 ## License
 
-MIT License - see LICENSE file for details
-
-## Support
-
-For questions or issues:
-- Create an issue on GitHub
-- Check the [Firebase documentation](https://firebase.google.com/docs)
-- Review the configuration examples above
-
-## Roadmap
-
-- [ ] Recurring events
-- [ ] Event categories/tags
-- [ ] Calendar sharing
-- [ ] Mobile app
-- [ ] Offline support
-- [ ] Advanced filtering
-- [ ] Export/import functionality
+This project is open-sourced under the MIT License. 
+```
