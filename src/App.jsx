@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Sun, Moon } from 'lucide-react'; // Added Sun and Moon icons
+import { ChevronLeft, ChevronRight, Plus, Sun, Moon } from 'lucide-react';
+import useStore from './store/useStore';
+import Auth from './components/Auth';
+import ErrorNotification from './components/ErrorNotification';
 
 // Helper function to format dates
 const formatDate = (date, options = {}) => {
@@ -57,38 +60,38 @@ const EventModal = ({ isOpen, onClose, onSave, date, eventToEdit, darkMode }) =>
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className={`rounded-lg shadow-xl p-6 w-full max-w-md border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-        <h2 className={`text-2xl font-semibold mb-4 ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{eventToEdit ? 'Edit Event' : 'Add New Event'}</h2>
+      <div className={`rounded-lg shadow-xl p-6 w-full max-w-md border ${darkMode ? 'moon-border bg-[#1f2747]/90 backdrop-blur-sm' : 'bg-white border-gray-200'}`}>
+        <h2 className={`text-2xl font-semibold mb-4 ${darkMode ? 'text-[#e5de44]' : 'text-gray-800'}`}>{eventToEdit ? 'Edit Event' : 'Add New Event'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="title" className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Title</label>
+            <label htmlFor="title" className={`block text-sm font-medium mb-1 ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>Title</label>
             <input
               type="text"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'}`}
+              className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[#e5de44] focus:border-[#e5de44] sm:text-sm ${darkMode ? 'bg-[#1c375c]/50 border-[#e5de44]/30 text-slate-100 placeholder-slate-400' : 'bg-white border-gray-300 text-gray-900'}`}
               required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="description" className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Description</label>
+            <label htmlFor="description" className={`block text-sm font-medium mb-1 ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>Description</label>
             <textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows="3"
-              className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'}`}
+              className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[#e5de44] focus:border-[#e5de44] sm:text-sm ${darkMode ? 'bg-[#1c375c]/50 border-[#e5de44]/30 text-slate-100 placeholder-slate-400' : 'bg-white border-gray-300 text-gray-900'}`}
             ></textarea>
           </div>
           <div className="mb-6">
-            <label htmlFor="time" className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>Time</label>
+            <label htmlFor="time" className={`block text-sm font-medium mb-1 ${darkMode ? 'text-slate-300' : 'text-gray-700'}`}>Time</label>
             <input
               type="time"
               id="time"
               value={time}
               onChange={(e) => setTime(e.target.value)}
-              className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${darkMode ? 'bg-gray-700 border-gray-600 text-gray-100' : 'bg-white border-gray-300 text-gray-900'}`}
+              className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-[#e5de44] focus:border-[#e5de44] sm:text-sm ${darkMode ? 'bg-[#1c375c]/50 border-[#e5de44]/30 text-slate-100' : 'bg-white border-gray-300 text-gray-900'}`}
               required
             />
           </div>
@@ -96,13 +99,13 @@ const EventModal = ({ isOpen, onClose, onSave, date, eventToEdit, darkMode }) =>
             <button
               type="button"
               onClick={onClose}
-              className={`px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out ${darkMode ? 'bg-gray-600 text-gray-200 hover:bg-gray-500 focus:ring-gray-500' : 'bg-gray-200 text-gray-800 focus:ring-gray-400'}`}
+              className={`px-4 py-2 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out ${darkMode ? 'bg-[#1c375c] text-slate-200 hover:bg-[#1c375c]/80 focus:ring-[#e5de44]' : 'bg-gray-200 text-gray-800 focus:ring-gray-400'}`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out shadow-md"
+              className={`px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out shadow-md ${darkMode ? 'bg-[#e5de44] text-[#151633] hover:bg-[#e5de44]/90 focus:ring-[#e5de44] moon-glow' : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'}`}
             >
               {eventToEdit ? 'Update Event' : 'Add Event'}
             </button>
@@ -121,28 +124,28 @@ const DayView = ({ currentDate, events, onAddEvent, onEditEvent, onDeleteEvent, 
   ).sort((a, b) => a.time.localeCompare(b.time));
 
   return (
-    <div className={`p-6 rounded-lg shadow-md border min-h-[calc(100vh-180px)] flex flex-col ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-      <h2 className={`text-3xl font-bold mb-6 text-center ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{formattedDate}</h2>
+    <div className={`p-6 rounded-lg shadow-md border min-h-[calc(100vh-180px)] flex flex-col ${darkMode ? 'moon-border bg-[#1f2747]/50 backdrop-blur-sm' : 'bg-white border-gray-200'}`}>
+      <h2 className={`text-3xl font-bold mb-6 text-center ${darkMode ? 'text-slate-100' : 'text-gray-800'}`}>{formattedDate}</h2>
       <div className="flex-grow">
         {dayEvents.length > 0 ? (
           <ul className="space-y-4">
             {dayEvents.map(event => (
-              <li key={event.id} className={`p-4 rounded-lg shadow-sm border flex justify-between items-center ${darkMode ? 'bg-blue-900 border-blue-800' : 'bg-blue-50 border-blue-100'}`}>
+              <li key={event.id} className={`p-4 rounded-lg shadow-sm border flex justify-between items-center ${darkMode ? 'bg-[#1c375c]/30 border-[#e5de44]/30 moon-glow' : 'bg-blue-50 border-blue-100'}`}>
                 <div>
-                  <p className={`text-lg font-semibold ${darkMode ? 'text-blue-300' : 'text-blue-800'}`}>{event.title}</p>
-                  <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{event.time} - {event.description}</p>
+                  <p className={`text-lg font-semibold ${darkMode ? 'text-[#e5de44]' : 'text-blue-800'}`}>{event.title}</p>
+                  <p className={`text-sm ${darkMode ? 'text-slate-300' : 'text-gray-600'}`}>{event.time} - {event.description}</p>
                 </div>
                 <div className="flex space-x-2">
                   <button
                     onClick={() => onEditEvent(event)}
-                    className={`p-2 rounded-full transition duration-150 ease-in-out ${darkMode ? 'bg-yellow-800 text-yellow-200 hover:bg-yellow-700' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}`}
+                    className={`p-2 rounded-full transition duration-150 ease-in-out ${darkMode ? 'bg-yellow-600/20 text-yellow-300 hover:bg-yellow-600/30 border border-yellow-500/30' : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'}`}
                     aria-label="Edit event"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4Z"></path></svg>
                   </button>
                   <button
                     onClick={() => onDeleteEvent(event.id)}
-                    className={`p-2 rounded-full transition duration-150 ease-in-out ${darkMode ? 'bg-red-800 text-red-200 hover:bg-red-700' : 'bg-red-100 text-red-700 hover:bg-red-200'}`}
+                    className={`p-2 rounded-full transition duration-150 ease-in-out ${darkMode ? 'bg-red-600/20 text-red-300 hover:bg-red-600/30 border border-red-500/30' : 'bg-red-100 text-red-700 hover:bg-red-200'}`}
                     aria-label="Delete event"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-trash-2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" x2="10" y1="11" y2="17"></line><line x1="14" x2="14" y1="11" y2="17"></line></svg>
@@ -152,13 +155,13 @@ const DayView = ({ currentDate, events, onAddEvent, onEditEvent, onDeleteEvent, 
             ))}
           </ul>
         ) : (
-          <p className={`text-center py-10 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>No events for this day. Click the '+' button to add one!</p>
+          <p className={`text-center py-10 ${darkMode ? 'text-slate-400' : 'text-gray-500'}`}>No events for this day. Click the '+' button to add one!</p>
         )}
       </div>
       <div className="mt-6 flex justify-center">
         <button
           onClick={() => onAddEvent(currentDate)}
-          className="flex items-center justify-center w-12 h-12 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out"
+          className={`flex items-center justify-center w-12 h-12 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out ${darkMode ? 'bg-[#e5de44] text-[#151633] hover:bg-[#e5de44]/90 focus:ring-[#e5de44] moon-glow' : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'}`}
           aria-label="Add new event"
         >
           <Plus size={24} />
@@ -183,8 +186,8 @@ const WeekView = ({ currentDate, events, onAddEvent, onEditEvent, onDeleteEvent,
   });
 
   return (
-    <div className={`p-6 rounded-lg shadow-md border min-h-[calc(100vh-180px)] flex flex-col ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-      <h2 className={`text-3xl font-bold mb-6 text-center ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+    <div className={`p-6 rounded-lg shadow-md border min-h-[calc(100vh-180px)] flex flex-col ${darkMode ? 'moon-border bg-[#1f2747]/50 backdrop-blur-sm' : 'bg-white border-gray-200'}`}>
+      <h2 className={`text-3xl font-bold mb-6 text-center ${darkMode ? 'text-slate-100' : 'text-gray-800'}`}>
         Week of {formatDate(startOfWeek, { month: 'long', day: 'numeric', year: 'numeric' })}
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-7 gap-4 flex-grow">
@@ -196,18 +199,18 @@ const WeekView = ({ currentDate, events, onAddEvent, onEditEvent, onDeleteEvent,
           return (
             <div key={formattedDay} className={`p-3 rounded-lg border flex flex-col ${
               isToday
-                ? (darkMode ? 'border-blue-700 bg-blue-950' : 'border-blue-400 bg-blue-50')
-                : (darkMode ? 'border-gray-700 bg-gray-700' : 'border-gray-200 bg-gray-50')
+                ? (darkMode ? 'border-[#e5de44] bg-[#e5de44]/10' : 'border-blue-400 bg-blue-50')
+                : (darkMode ? 'border-[#e5de44]/30 bg-[#1c375c]/30' : 'border-gray-200 bg-gray-50')
             }`}>
-              <h3 className={`text-center font-semibold mb-2 ${isToday ? (darkMode ? 'text-blue-300' : 'text-blue-700') : (darkMode ? 'text-gray-200' : 'text-gray-700')}`}>
+              <h3 className={`text-center font-semibold mb-2 ${isToday ? (darkMode ? 'text-[#e5de44]' : 'text-blue-700') : (darkMode ? 'text-[#e5de44]' : 'text-gray-700')}`}>
                 {formatDate(day, { weekday: 'short', day: 'numeric' })}
               </h3>
               <div className="flex-grow space-y-2 text-sm overflow-y-auto max-h-48 md:max-h-full">
                 {dayEvents.length > 0 ? (
                   dayEvents.map(event => (
-                    <div key={event.id} className={`p-2 rounded-md shadow-sm border break-words ${darkMode ? 'bg-gray-800 border-gray-600 text-gray-100' : 'bg-white border-gray-100 text-gray-800'}`}>
-                      <p className={`font-medium ${darkMode ? 'text-blue-400' : 'text-blue-600'}`}>{event.title}</p>
-                      <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{event.time}</p>
+                    <div key={event.id} className={`p-2 rounded-md shadow-sm border break-words ${darkMode ? 'bg-[#151633]/50 border-[#e5de44]/20 text-slate-100' : 'bg-white border-gray-100 text-gray-800'}`}>
+                      <p className={`font-medium ${darkMode ? 'text-[#e5de44]' : 'text-blue-600'}`}>{event.title}</p>
+                      <p className={`text-xs ${darkMode ? 'text-slate-300' : 'text-gray-500'}`}>{event.time}</p>
                       <div className="flex justify-end space-x-1 mt-1">
                         <button
                           onClick={() => onEditEvent(event)}
@@ -232,7 +235,7 @@ const WeekView = ({ currentDate, events, onAddEvent, onEditEvent, onDeleteEvent,
               </div>
               <button
                 onClick={() => onAddEvent(day)}
-                className="mt-2 flex items-center justify-center w-8 h-8 mx-auto bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 transition duration-150 ease-in-out"
+                className={`mt-2 flex items-center justify-center w-8 h-8 mx-auto rounded-full shadow-md transition duration-150 ease-in-out ${darkMode ? 'bg-[#e5de44] text-[#151633] hover:bg-[#e5de44]/90' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
                 aria-label={`Add event for ${formatDate(day, { month: 'short', day: 'numeric' })}`}
               >
                 <Plus size={16} />
@@ -275,11 +278,11 @@ const MonthView = ({ currentDate, events, onAddEvent, onEditEvent, onDeleteEvent
   });
 
   return (
-    <div className={`p-6 rounded-lg shadow-md border min-h-[calc(100vh-180px)] flex flex-col ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-      <h2 className={`text-3xl font-bold mb-6 text-center ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>
+    <div className={`p-6 rounded-lg shadow-md border min-h-[calc(100vh-180px)] flex flex-col ${darkMode ? 'moon-border bg-[#1f2747]/50 backdrop-blur-sm' : 'bg-white border-gray-200'}`}>
+      <h2 className={`text-3xl font-bold mb-6 text-center ${darkMode ? 'text-slate-100' : 'text-gray-800'}`}>
         {formatDate(currentDate, { month: 'long', year: 'numeric' })}
       </h2>
-      <div className={`grid grid-cols-7 gap-2 text-center text-sm font-semibold mb-2 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+      <div className={`grid grid-cols-7 gap-2 text-center text-sm font-semibold mb-2 ${darkMode ? 'text-[#e5de44]' : 'text-gray-600'}`}>
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
           <div key={day} className="py-2">{day}</div>
         ))}
@@ -295,27 +298,27 @@ const MonthView = ({ currentDate, events, onAddEvent, onEditEvent, onDeleteEvent
               key={index}
               className={`relative h-28 p-1 rounded-lg border flex flex-col ${
                 day
-                  ? (darkMode ? 'bg-gray-700' : 'bg-gray-50')
-                  : (darkMode ? 'bg-gray-800' : 'bg-gray-100')
+                  ? (darkMode ? 'bg-[#1c375c]/30' : 'bg-gray-50')
+                  : (darkMode ? 'bg-[#151633]/20' : 'bg-gray-100')
               } ${
                 isCurrentDay
-                  ? (darkMode ? 'border-blue-700 bg-blue-950' : 'border-blue-500 bg-blue-100')
-                  : (darkMode ? 'border-gray-600' : 'border-gray-200')
+                  ? (darkMode ? 'border-[#e5de44] bg-[#e5de44]/10' : 'border-blue-500 bg-blue-100')
+                  : (darkMode ? 'border-[#e5de44]/30' : 'border-gray-200')
               } ${isToday && !isCurrentDay
-                  ? (darkMode ? 'border-green-700 bg-green-900' : 'border-green-400 bg-green-50')
+                  ? (darkMode ? 'border-[#e5de44] bg-[#e5de44]/5' : 'border-green-400 bg-green-50')
                   : ''
               }`}
             >
               {day ? (
                 <>
-                  <span className={`text-sm font-medium ${isCurrentDay ? (darkMode ? 'text-blue-300' : 'text-blue-800') : (darkMode ? 'text-gray-100' : 'text-gray-800')}`}>
+                  <span className={`text-sm font-medium ${isCurrentDay ? (darkMode ? 'text-[#e5de44]' : 'text-blue-800') : (darkMode ? 'text-slate-100' : 'text-gray-800')}`}>
                     {day.getDate()}
                   </span>
                   <div className="flex-grow overflow-y-auto text-xs space-y-0.5 mt-1">
                     {dayEvents.map(event => (
                       <div
                         key={event.id}
-                        className={`rounded-sm px-1 py-0.5 truncate cursor-pointer transition duration-150 ${darkMode ? 'bg-blue-800 text-blue-200 hover:bg-blue-700' : 'bg-blue-200 text-blue-900 hover:bg-blue-300'}`}
+                        className={`rounded-sm px-1 py-0.5 truncate cursor-pointer transition duration-150 ${darkMode ? 'bg-[#e5de44]/20 text-[#e5de44] hover:bg-[#e5de44]/30 border border-[#e5de44]/30' : 'bg-blue-200 text-blue-900 hover:bg-blue-300'}`}
                         onClick={() => onEditEvent(event)}
                         title={`${event.time} - ${event.title}`}
                       >
@@ -325,7 +328,7 @@ const MonthView = ({ currentDate, events, onAddEvent, onEditEvent, onDeleteEvent
                   </div>
                   <button
                     onClick={() => onAddEvent(day)}
-                    className="absolute bottom-1 right-1 flex items-center justify-center w-6 h-6 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 transition duration-150 ease-in-out"
+                    className={`absolute bottom-1 right-1 flex items-center justify-center w-6 h-6 rounded-full shadow-md transition duration-150 ease-in-out ${darkMode ? 'bg-[#e5de44] text-[#151633] hover:bg-[#e5de44]/90' : 'bg-blue-500 text-white hover:bg-blue-600'}`}
                     aria-label={`Add event for ${day.getDate()}`}
                   >
                     <Plus size={14} />
@@ -346,16 +349,27 @@ const MonthView = ({ currentDate, events, onAddEvent, onEditEvent, onDeleteEvent
 const App = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState('month'); // 'day', 'week', 'month'
-  const [events, setEvents] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDateForModal, setSelectedDateForModal] = useState(null);
   const [eventToEdit, setEventToEdit] = useState(null);
-  const [darkMode, setDarkMode] = useState(false); // New state for dark mode
+  
+  // Get state from store
+  const { 
+    user, 
+    events, 
+    darkMode, 
+    toggleDarkMode, 
+    addEvent, 
+    updateEvent, 
+    deleteEvent,
+    initialize 
+  } = useStore();
 
-  // Function to toggle dark mode
-  const toggleDarkMode = useCallback(() => {
-    setDarkMode(prevMode => !prevMode);
-  }, []);
+  // Initialize store on component mount
+  useEffect(() => {
+    const cleanup = initialize();
+    return cleanup;
+  }, [initialize]);
 
   // Function to handle adding a new event
   const handleAddEvent = useCallback((date) => {
@@ -372,25 +386,20 @@ const App = () => {
   }, []);
 
   // Function to save an event (add or update)
-  const handleSaveEvent = useCallback((newEvent) => {
-    setEvents(prevEvents => {
-      const existingEventIndex = prevEvents.findIndex(e => e.id === newEvent.id);
-      if (existingEventIndex > -1) {
-        // Update existing event
-        const updatedEvents = [...prevEvents];
-        updatedEvents[existingEventIndex] = newEvent;
-        return updatedEvents;
-      } else {
-        // Add new event
-        return [...prevEvents, newEvent];
-      }
-    });
-  }, []);
+  const handleSaveEvent = useCallback(async (newEvent) => {
+    if (eventToEdit) {
+      await updateEvent(newEvent.id, newEvent);
+    } else {
+      await addEvent(newEvent);
+    }
+    setIsModalOpen(false);
+    setEventToEdit(null);
+  }, [eventToEdit, addEvent, updateEvent]);
 
   // Function to delete an event
-  const handleDeleteEvent = useCallback((idToDelete) => {
-    setEvents(prevEvents => prevEvents.filter(event => event.id !== idToDelete));
-  }, []);
+  const handleDeleteEvent = useCallback(async (idToDelete) => {
+    await deleteEvent(idToDelete);
+  }, [deleteEvent]);
 
   // Navigation functions
   const goToPrevious = useCallback(() => {
@@ -437,46 +446,90 @@ const App = () => {
   }, [currentDate, currentView]);
 
   return (
-    <div className={`min-h-screen font-sans p-4 sm:p-6 ${darkMode ? 'bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100' : 'bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-900'}`}>
+    <div className={`min-h-screen font-sans p-4 sm:p-6 ${darkMode ? 'bg-gradient-to-br from-[#151633] via-[#1f2747] to-[#1c375c] text-slate-100' : 'bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-900'}`}>
       <style>
         {`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
           font-family: 'Inter', sans-serif;
         }
+        
+        /* Night sky background with subtle stars */
+        .night-sky-bg {
+          background: radial-gradient(ellipse at top, #1f2747 0%, #151633 50%, #0f172a 100%);
+          position: relative;
+        }
+        
+        .night-sky-bg::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: 
+            radial-gradient(2px 2px at 20px 30px, #ffffff15, transparent),
+            radial-gradient(2px 2px at 40px 70px, #ffffff10, transparent),
+            radial-gradient(1px 1px at 90px 40px, #ffffff08, transparent),
+            radial-gradient(1px 1px at 130px 80px, #ffffff15, transparent),
+            radial-gradient(2px 2px at 160px 30px, #ffffff10, transparent);
+          background-repeat: repeat;
+          background-size: 200px 100px;
+          animation: twinkle 6s ease-in-out infinite alternate;
+          pointer-events: none;
+        }
+        
+        @keyframes twinkle {
+          0% { opacity: 0.2; }
+          100% { opacity: 0.6; }
+        }
+        
         /* Custom scrollbar for event lists */
         .overflow-y-auto::-webkit-scrollbar {
           width: 6px;
         }
         .overflow-y-auto::-webkit-scrollbar-track {
-          background: ${darkMode ? '#333' : '#f1f1f1'};
+          background: ${darkMode ? '#151633' : '#f1f1f1'};
           border-radius: 10px;
         }
         .overflow-y-auto::-webkit-scrollbar-thumb {
-          background: ${darkMode ? '#555' : '#888'};
+          background: ${darkMode ? '#1c375c' : '#888'};
           border-radius: 10px;
         }
         .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-          background: ${darkMode ? '#777' : '#555'};
+          background: ${darkMode ? '#e5de44' : '#555'};
+        }
+        
+        /* Moon glow effects */
+        .moon-glow {
+          box-shadow: 0 0 20px rgba(229, 222, 68, 0.15);
+        }
+        
+        .moon-border {
+          border: 1px solid rgba(229, 222, 68, 0.3);
+          background: linear-gradient(135deg, rgba(229, 222, 68, 0.05) 0%, rgba(229, 222, 68, 0.02) 100%);
         }
         `}
       </style>
 
-      {/* Header for navigation and view selection */}
-      <div className={`rounded-lg shadow-xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+      {/* Error Notification */}
+      <ErrorNotification />
+
+      {/* Header with Authentication */}
+      <div className={`rounded-lg shadow-xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between border ${darkMode ? 'moon-border moon-glow bg-[#1f2747]/50 backdrop-blur-sm' : 'bg-white border-gray-200'}`}>
         {/* Navigation Buttons */}
         <div className="flex items-center space-x-3 mb-4 md:mb-0">
           <button
             onClick={goToPrevious}
-            className={`p-2 rounded-full transition duration-150 ease-in-out shadow-sm ${darkMode ? 'bg-blue-900 text-blue-300 hover:bg-blue-800' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}
+            className={`p-2 rounded-full transition duration-150 ease-in-out shadow-sm ${darkMode ? 'bg-[#1c375c]/50 text-[#e5de44] hover:bg-[#e5de44]/20 hover:text-[#e5de44] border border-[#e5de44]/30' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}
             aria-label="Previous"
           >
             <ChevronLeft size={24} />
           </button>
-          <h1 className={`text-2xl font-bold text-center flex-grow min-w-[200px] ${darkMode ? 'text-gray-100' : 'text-gray-800'}`}>{getHeaderTitle()}</h1>
+          <h1 className={`text-2xl font-bold text-center flex-grow min-w-[200px] ${darkMode ? 'text-slate-100' : 'text-gray-800'}`}>{getHeaderTitle()}</h1>
           <button
             onClick={goToNext}
-            className={`p-2 rounded-full transition duration-150 ease-in-out shadow-sm ${darkMode ? 'bg-blue-900 text-blue-300 hover:bg-blue-800' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}
+            className={`p-2 rounded-full transition duration-150 ease-in-out shadow-sm ${darkMode ? 'bg-[#1c375c]/50 text-[#e5de44] hover:bg-[#e5de44]/20 hover:text-[#e5de44] border border-[#e5de44]/30' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}`}
             aria-label="Next"
           >
             <ChevronRight size={24} />
@@ -484,11 +537,11 @@ const App = () => {
         </div>
 
         {/* View Selection Buttons */}
-        <div className={`flex space-x-2 p-1 rounded-full shadow-inner ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+        <div className={`flex space-x-2 p-1 rounded-full shadow-inner ${darkMode ? 'bg-[#1c375c]/30 border border-[#e5de44]/20' : 'bg-gray-100'}`}>
           <button
             onClick={() => setCurrentView('day')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition duration-200 ease-in-out ${
-              currentView === 'day' ? 'bg-blue-600 text-white shadow-md' : (darkMode ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-200')
+              currentView === 'day' ? 'bg-[#e5de44] text-[#151633] shadow-lg' : (darkMode ? 'text-slate-300 hover:bg-[#e5de44]/20 hover:text-[#e5de44]' : 'text-gray-700 hover:bg-gray-200')
             }`}
           >
             Day
@@ -496,7 +549,7 @@ const App = () => {
           <button
             onClick={() => setCurrentView('week')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition duration-200 ease-in-out ${
-              currentView === 'week' ? 'bg-blue-600 text-white shadow-md' : (darkMode ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-200')
+              currentView === 'week' ? 'bg-[#e5de44] text-[#151633] shadow-lg' : (darkMode ? 'text-slate-300 hover:bg-[#e5de44]/20 hover:text-[#e5de44]' : 'text-gray-700 hover:bg-gray-200')
             }`}
           >
             Week
@@ -504,24 +557,44 @@ const App = () => {
           <button
             onClick={() => setCurrentView('month')}
             className={`px-4 py-2 rounded-full text-sm font-medium transition duration-200 ease-in-out ${
-              currentView === 'month' ? 'bg-blue-600 text-white shadow-md' : (darkMode ? 'text-gray-300 hover:bg-gray-600' : 'text-gray-700 hover:bg-gray-200')
+              currentView === 'month' ? 'bg-[#e5de44] text-[#151633] shadow-lg' : (darkMode ? 'text-slate-300 hover:bg-[#e5de44]/20 hover:text-[#e5de44]' : 'text-gray-700 hover:bg-gray-200')
             }`}
           >
             Month
           </button>
         </div>
 
-        {/* Dark Mode Toggle Button */}
-        <button
-          onClick={toggleDarkMode}
-          className={`p-2 rounded-full transition duration-150 ease-in-out shadow-sm mt-4 md:mt-0 ${
-            darkMode ? 'bg-blue-700 text-blue-200 hover:bg-blue-600' : 'bg-yellow-400 text-yellow-900 hover:bg-yellow-500'
-          }`}
-          aria-label="Toggle dark mode"
-        >
-          {darkMode ? <Moon size={24} /> : <Sun size={24} />}
-        </button>
+        {/* Right side controls */}
+        <div className="flex items-center space-x-3">
+          {/* Authentication */}
+          <Auth />
+          
+          {/* Dark Mode Toggle Button */}
+          <button
+            onClick={toggleDarkMode}
+            className={`p-2 rounded-full transition duration-150 ease-in-out shadow-sm ${
+              darkMode ? 'bg-[#e5de44] text-[#151633] hover:bg-[#e5de44]/90 moon-glow' : 'bg-gradient-to-r from-yellow-400 to-orange-400 text-yellow-900 hover:from-yellow-500 hover:to-orange-500'
+            }`}
+            aria-label="Toggle dark mode"
+          >
+            {darkMode ? <Moon size={24} /> : <Sun size={24} />}
+          </button>
+        </div>
       </div>
+
+      {/* Show sync status for unauthenticated users */}
+      {!user && (
+        <div className={`mb-4 p-3 rounded-lg border ${darkMode ? 'moon-border bg-[#1f2747]/30 text-[#e5de44]' : 'bg-blue-50 border-blue-200 text-blue-800'}`}>
+          <div className="flex items-center space-x-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="text-sm">
+              Events are saved locally. Sign in to sync across devices and access your data from anywhere.
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Render the current view */}
       {currentView === 'day' && (
